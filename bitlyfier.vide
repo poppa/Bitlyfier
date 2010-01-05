@@ -1,0 +1,31 @@
+--- !Project
+path: /home/pontus/Vala/bitlyfier
+name: Bitlyfier
+author: 
+version: 
+license: None
+builder: make
+builder-options: !NativeBuilderOptions
+  debug: false
+  thread: false
+  disable-assert: false
+  disable-checking: false
+  disable-non-null: false
+  save-temps: false
+  quiet: false
+  other: 
+executable-options:
+  program: 
+  arguments: 
+  working-dir: /home/pontus/Vala/bitlyfier
+  environment: []
+files:
+- path: src/bitly.vala
+- path: src/main.vala
+- path: src/mainwindow.vala
+- path: src/application.vala
+packages:
+- name: soup-2.4
+- name: gee-1.0
+- name: gtk+-2.0
+vapi_dir: []

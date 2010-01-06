@@ -34,20 +34,36 @@ bitlyfier_LDADD =                                                        \
 	$(BITLYFIER_LIBS)                                                      \
 	$(NULL)
 
+launcherdir = ${datadir}/applications
+launcher_DATA = bitlyfier.desktop
+
+edit = sed -e 's,@BINDIR\@,$(bindir),g' -e 's,@PIXMAPDIR\@,$(pixmapdir),g'
+
+bitlyfier.desktop: Makefile bitlyfier.desktop.in
+	rm -f bitlyfier.desktop bitlyfier.desktop.tmp
+	$(edit) bitlyfier.desktop.in > bitlyfier.desktop.tmp
+	mv bitlyfier.desktop.tmp bitlyfier.desktop
+
 bitlyfierextradir = ${datadir}/bitlyfier/ui
 bitlyfierextra_DATA =                                                    \
 	ui/windows.ui                                                          \
 	$(NULL)
 
-bitlyfierpixmapsdir = ${datadir}/bitlyfier/ui
+bitlyfierpixmapsdir = ${datadir}/pixmaps
 bitlyfierpixmaps_DATA =                                                  \
 	ui/bitlyfier.png                                                       \
+	$(NULL)
+
+bitlyfierextrapixmapsdir = ${datadir}/bitlyfier/ui
+bitlyfierextrapixmaps_DATA =                                             \
+	ui/bitlyfier-about.png                                                 \
 	ui/bitlyfier-small.png                                                 \
 	$(NULL)
 
 EXTRA_DIST =                                                             \
 	$(bitlyfierextra_DATA)                                                 \
 	$(bitlyfierpixmaps_DATA)                                               \
+	$(bitlyfierextrapixmaps_DATA)                                          \
 	$(NULL)
 
 DISTCLEANFILES =                                                         \

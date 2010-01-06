@@ -1,4 +1,4 @@
-AC_INIT([bitlyfier], [0.1.0], [pontus@poppa.se], [bitlyfier])
+AC_INIT([bitlyfier], [0.1.2], [pontus@poppa.se], [bitlyfier])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([dist-bzip2])

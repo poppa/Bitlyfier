@@ -19,7 +19,7 @@
 
 GETTEXT_PACKAGE = bitlyfier
 PACKAGE = bitlyfier
-VERSION = 0.1.0
+VERSION = 0.1.2
 
 SHELL = /bin/bash
 

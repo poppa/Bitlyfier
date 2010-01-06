@@ -234,11 +234,11 @@ public class Bitlyfier.MainWindow : GLib.Object
   {
     var d = new AboutDialog();
     try {
-      d.logo = new Gdk.Pixbuf.from_file(get_resource("bitlyfier.png"));
+      d.logo = new Gdk.Pixbuf.from_file(get_resource("bitlyfier-about.png"));
       d.icon = new Gdk.Pixbuf.from_file(get_resource("bitlyfier-small.png"));
     }
     catch (GLib.Error e) {}
-    
+
     d.program_name = "Bit.ly.fier";
     d.set_version(Config.VERSION);
     d.authors = { "Pontus Östlund <pontus@poppa.se>", null };
@@ -376,4 +376,3 @@ public class Bitlyfier.SettingsForm : GLib.Object
     return builder.get_object(name);
   }
 }
-

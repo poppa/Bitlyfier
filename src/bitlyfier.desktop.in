@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Categories=Network;GNOME;GTK;Application;
+Name=Bitlyfier
+GenericName=Shorten/expand URLs via Bit.ly
+Name[sv]=Korta/expandera URLer via Bit.ly
+Exec=@BINDIR@/bitlyfier
+Icon=bitlyfier
+X-Icon-path=/usr/share/pixmaps
+X-Window-Icon=bitlyfier

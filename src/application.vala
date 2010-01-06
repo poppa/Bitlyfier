@@ -23,6 +23,30 @@ using GConf;
 
 namespace Bitlyfier
 {
+  errordomain Error {
+    GENERIC;
+  }
+
+  public string? get_resource(string resource)
+  {
+    // The first two indices is for local usage during development
+    string[] paths = { "ui", "src/ui", Config.DATADIR + "/bitlyfier/ui" };
+    string full_path = null;
+
+    foreach (string path in paths) {
+      full_path = Path.build_filename(path, resource);
+      if (file_exists(full_path))
+        return full_path;
+    }
+
+    return null;
+  }
+  
+  public bool file_exists(string file)
+  {
+    return FileUtils.test(file, FileTest.EXISTS);
+  }
+
   public class Settings : GLib.Object
   {
     private GConf.Client gcli;

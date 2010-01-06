@@ -1,4 +1,4 @@
-/* (filename).vala
+/* bitly.vala
  *
  * Copyright (C) 2010  Pontus Östlund
  *
@@ -22,12 +22,12 @@
 using Gee;
 using Soup;
 
-errordomain BitlyError {
-  GENERIC;
-}
-
 namespace Bitly
 {
+  errordomain Error {
+    GENERIC;
+  }
+
   public class Api
   {
     /**
@@ -60,18 +60,20 @@ namespace Bitly
     /** 
      * Returns info about the page of the shortened URL, page title etc...
      *
-     * @param url_or_hash
+     * @param url
      *  Either the shortened URL or its hash.
      * @param keys
      *  One or more keys to limit the attributes returned about each bitly 
      *  document, eg: htmlTitle,thumbnail
      */
-    public Response? info(string url_or_hash, string[]? keys=null)
-      throws BitlyError, Error
+    public Response? info(string _url, string[]? keys=null)
+      throws Bitly.Error, GLib.Error
     {
       assert(format == FORMAT_JSON);
-
-      HashMap<string,string> args = url_param(url_or_hash);
+      
+      var url = _url.dup().strip();
+      
+      HashMap<string,string> args = url_param(url);
       if (keys != null)
         args.set("keys", join_array(",", keys));
 
@@ -81,7 +83,7 @@ namespace Bitly
       Response res = null;
 
       if (root.get_size() > 0) {
-        Json.Node node = root.get_member(url_or_hash).copy();
+        Json.Node node = root.get_member(url).copy();
         res = new Response(node.dup_object());
       }
 
@@ -93,11 +95,13 @@ namespace Bitly
      *
      * @param url
      */
-    public Response? shorten(string url)
-      throws BitlyError, Error
+    public Response? shorten(string _url)
+      throws Bitly.Error, GLib.Error
     {
       assert(format == FORMAT_JSON);
-          
+
+      var url = _url.dup().strip();
+
       string resp = call("shorten", url_param(url));
       Json.Object root = get_json_root(resp);
       Response res = null;
@@ -113,18 +117,33 @@ namespace Bitly
      *
      * @param url
      */
-    public Response? expand(string url)
-      throws BitlyError, Error
+    public Response? expand(string _url)
+      throws Bitly.Error, GLib.Error
     {
       assert(format == FORMAT_JSON);
-
+      
+      var url = _url.dup().strip();
+      
       string resp = call("expand", url_param(url));
       Json.Object root = get_json_root(resp);
       Response res = null;
       if (root.get_size() > 0) {
-        Json.Node node = root.get_member(url).copy();
+        unowned Json.Node tmp = root.get_member(url);
+        Json.Node node = null;
+        if (tmp != null)
+          node = root.get_member(url).copy();
+        else {
+          GLib.List<unowned string> m = root.get_members();
+          foreach (string k in m) {
+            if ((tmp = root.get_member(k)) != null) {
+              node = tmp.copy();
+              break;  
+            }
+          }
+        }
         res = new Response(node.dup_object());
       }
+
       return res;
     }
     
@@ -134,10 +153,12 @@ namespace Bitly
      * @param url_or_hash
      *  Either the shortened URL or its hash.
      */
-    public Response? stats(string url)
-      throws BitlyError, Error
+    public Response? stats(string _url)
+      throws Bitly.Error, GLib.Error
     {
       assert(format == FORMAT_JSON);
+
+      var url = _url.dup().strip();
 
       string resp = call("stats", url_param(url));
       Json.Object root = get_json_root(resp);
@@ -157,7 +178,7 @@ namespace Bitly
      * @param params
      */
     public string call(string service, HashMap<string,string> args)
-      throws BitlyError, Error
+      throws Bitly.Error, GLib.Error
     {
       string url = get_normalized_url(service);
       HashMap<string,string> params = new HashMap<string,string>();
@@ -193,12 +214,12 @@ namespace Bitly
       sess.send_message(mess);
     
       if (mess.status_code != 200)
-        throw new BitlyError.GENERIC("Bad status (%ld) in response: %s".printf(
-                                     mess.status_code, mess.reason_phrase));
+        throw new Bitly.Error.GENERIC("Bad status (%ld) in response: %s".printf(
+                                      mess.status_code, mess.reason_phrase));
 
       return mess.response_body.data;
     }
-    
+
     /**
      * Creates either of the mandatory argumens "hash" or "longUrl".
      *
@@ -209,15 +230,19 @@ namespace Bitly
       string ret = url.dup();
       HashMap<string,string> m = new HashMap<string,string>();
       string key = null;
-      if (ret.contains("://"))
-        key = "longUrl";
+      if (ret.contains("://")) {
+        if (url.substring(0, "http://bit.ly".length) == "http://bit.ly")
+          key = "shortUrl";
+        else
+          key = "longUrl";
+      }
       else if (ret.length >= 6 && ret.substring(0, 6) == "bit.ly") {
         key = "longUrl";
         ret = "http://" + ret;  
       }
       else
         key = "hash";
-        
+
       m.set(key, url);
       return m;
     } 
@@ -252,7 +277,7 @@ namespace Bitly
      *  The "results" node as a Json.Object
      */
     private Json.Object get_json_root(string json_string)
-      throws BitlyError, Error
+      throws Bitly.Error, GLib.Error
     {
       var parser = new Json.Parser();
       parser.load_from_data(json_string, json_string.length);
@@ -262,13 +287,13 @@ namespace Bitly
       if (status == "ERROR") {
         string m = root.get_member("errorMessage").get_string();
         int c = root.get_member("errorCode").get_int();
-        throw new BitlyError.GENERIC("Bitly error (%d): %s".printf(c, m)); 
+        throw new Bitly.Error.GENERIC("Bitly error (%d): %s".printf(c, m)); 
       }
 
       unowned Json.Node o = root.get_member("results");
       
       if (o.get_value_type().name() != "JsonObject")
-        throw new BitlyError.GENERIC("Result is not a JSON object!");
+        throw new Bitly.Error.GENERIC("Result is not a JSON object!");
 
       Json.Object obj = o.dup_object();
       return obj;

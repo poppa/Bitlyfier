@@ -21,7 +21,7 @@
 
 Bitlyfier.MainWindow window;
 Bitlyfier.Settings settings;
-Bitly.Api api;
+Bitly.Api               api;
 
 static string arg_expand;
 static string arg_shorten;

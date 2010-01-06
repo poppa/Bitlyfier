@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: bitlyfier 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-01-06 15:28+0100\n"
-"PO-Revision-Date: 2010-01-06 15:28+0100\n"
+"PO-Revision-Date: 2010-01-06 17:42+0100\n"
 "Last-Translator: Pontus Östlund <pontus@poppa.se>\n"
 "Language-Team: Swedish <pontus@poppa.se>\n"
 "MIME-Version: 1.0\n"
@@ -86,7 +86,7 @@ msgstr "Värdena är sparade!"
 #: src/main.c:496
 #, c-format
 msgid "Short URL: %s"
-msgstr "Kort URL: %s"
+msgstr "Kort adress: %s"
 
 #: src/main.c:512
 #, c-format

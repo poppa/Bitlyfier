@@ -49,7 +49,7 @@ namespace Bitly
      * Base URL to the Bit.ly API
      */
     const string BASE_URL = "http://api.bit.ly";
-    
+
     /**
      * The Bit.ly user to log in as.
      */
@@ -110,9 +110,9 @@ namespace Bitly
       throws Bitly.Error, GLib.Error
     {
       assert(format == FORMAT_JSON);
-      
+
       var url = _url.dup().strip();
-      
+
       HashMap<string,string> args = url_param(url);
       if (keys != null)
         args.set("keys", join_array(",", keys));
@@ -203,10 +203,8 @@ namespace Bitly
       string resp = call("stats", url_param(url));
       Json.Object root = get_json_root(resp);
       Response res = null;
-      if (root.get_size() > 0) {
-        //Json.Node node = root.get_member(url);
+      if (root.get_size() > 0)
         res = new Response(root);
-      }
       
       return res;
     }
@@ -220,7 +218,7 @@ namespace Bitly
     public string call(string service, HashMap<string,string> args)
       throws Bitly.Error, GLib.Error
     {
-      string url = get_normalized_url(service);
+      string url = get_endpoint_url(service);
       HashMap<string,string> params = new HashMap<string,string>();
       params.set("version", version);
       params.set("apikey", apikey);
@@ -231,7 +229,7 @@ namespace Bitly
 
       if (args.size > 0)
         foreach (string k in args.keys)
-          params.set(k, args[k]);
+          params.set(k, safe_param(args[k]));
 
       string query = "";
       int i = 0;
@@ -251,8 +249,9 @@ namespace Bitly
 #if BITLY_DEBUG
       sess.add_feature = new Logger(LoggerLogLevel.BODY, -1);
 #endif
+
       sess.send_message(mess);
-    
+
       if (mess.status_code != 200) {
         var m = _("Bad status (%ld) in response: %s");
         throw new Bitly.Error.GENERIC(m.printf(mess.status_code, 
@@ -267,7 +266,7 @@ namespace Bitly
      *
      * @param url
      */
-    private HashMap<string,string> url_param(string url)
+    HashMap<string,string> url_param(string url)
     {
       string ret = url.dup();
       HashMap<string,string> m = new HashMap<string,string>();
@@ -287,7 +286,17 @@ namespace Bitly
 
       m.set(key, url);
       return m;
-    } 
+    }
+    
+    /**
+     * URI escapes the parameter
+     *
+     * @param param
+     */
+    string safe_param(string param)
+    {
+      return Uri.escape_string(param, "", true);
+    }
     
     /**
      * Returns the full normalized URL to the Bitly API
@@ -295,7 +304,7 @@ namespace Bitly
      * @param service
      *  The service to call, e.g info, shorten, expand etc
      */
-    private string get_normalized_url(string service)
+    string get_endpoint_url(string service)
     {
       string ret = service.dup();
 
@@ -318,7 +327,7 @@ namespace Bitly
      * @return
      *  The "results" node as a Json.Object
      */
-    private Json.Object get_json_root(string json_string)
+    Json.Object get_json_root(string json_string)
       throws Bitly.Error, GLib.Error
     {
       var parser = new Json.Parser();

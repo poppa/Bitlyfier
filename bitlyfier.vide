@@ -20,12 +20,13 @@ executable-options:
   working-dir: /home/pontus/Vala/bitlyfier
   environment: []
 files:
-- path: src/bitly.vala
-- path: src/main.vala
-- path: src/mainwindow.vala
 - path: src/application.vala
+- path: src/mainwindow.vala
+- path: src/main.vala
+- path: src/bitly.vala
+- path: README
 packages:
-- name: soup-2.4
-- name: gee-1.0
 - name: gtk+-2.0
+- name: gee-1.0
+- name: soup-2.4
 vapi_dir: []

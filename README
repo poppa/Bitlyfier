@@ -1,0 +1,37 @@
+# About Bitlyfier
+
+Bitlyfier lets you shorten and expand links (URLs) via Bit.ly - a service that 
+allowes users to shorten, share and track links. Bitlyfier is both a desktop
+and command line application.
+
+The "Bitly" class (src/bitly.vala) can also be used as a standalone 
+implementation of the Bit.ly API.
+
+
+# Install
+
+A simple './configure && make && make install' should install the application
+if all dependencies are met. 
+
+
+# Command line usage
+
+Usage:
+  bitlyfier [OPTION...] - Bitlyfier, URL shortener/expander
+
+Help Options:
+  -h, --help        Show help options
+
+Application Options:
+  -e, --expand      Expands the given URL
+  -s, --shorten     Shortens the given URL
+  -n, --no-gui      Sets the application in command line mode
+  -g, --gconf       Invokes setting username and apikey
+
+To set the username and API key from the command line do:
+
+  user@machine:~$ bitlyfier -n --gconf
+
+So to shorten a long URL do like:
+
+  user@machine:~$ bitlyfier -n -s http://domain.com/long/url/to/shorten

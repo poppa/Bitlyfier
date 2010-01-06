@@ -262,7 +262,7 @@ public class Bitlyfier.MainWindow : GLib.Object
     d.copyright = "Copyright © 2010 Pontus Östlund";
     d.website = "http://poppa.se";
     d.website_label = "www.poppa.se";
-    d.comments = _("Bitlyfier lets you shorten or expand links (URLs) via"     +
+    d.comments = _("Bitlyfier lets you shorten and expand links (URLs) via"    +
                    "\nBit.ly - a service that allowes users to shorten, "      +
                    "share\nand track links");  
     d.run();

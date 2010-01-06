@@ -34,12 +34,20 @@ bitlyfier_LDADD =                                                        \
 	$(BITLYFIER_LIBS)                                                      \
 	$(NULL)
 
-bitlyfierextradir = ${datadir}/roxenlauncher/gui
+bitlyfierextradir = ${datadir}/bitlyfier/ui
 bitlyfierextra_DATA =                                                    \
 	ui/windows.ui                                                          \
 	$(NULL)
 
+bitlyfierpixmapsdir = ${datadir}/bitlyfier/ui
+bitlyfierpixmaps_DATA =                                                  \
+	ui/bitlyfier.png                                                       \
+	ui/bitlyfier-small.png                                                 \
+	$(NULL)
+
 EXTRA_DIST =                                                             \
+	$(bitlyfierextra_DATA)                                                 \
+	$(bitlyfierpixmaps_DATA)                                               \
 	$(NULL)
 
 DISTCLEANFILES =                                                         \

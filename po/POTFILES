@@ -1,1 +1,5 @@
-	../src/mainwindow.vala
+	../src/main.vala \
+	../src/mainwindow.vala \
+	../src/bitly.vala \
+	../src/application.vala \
+	../src/ui/windows.ui

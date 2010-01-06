@@ -21,6 +21,9 @@
 
 using Gtk;
 
+/**
+ * The application main window
+ */
 public class Bitlyfier.MainWindow : GLib.Object
 {
   Builder     builder;
@@ -31,9 +34,6 @@ public class Bitlyfier.MainWindow : GLib.Object
   RadioButton rb_expand;
   Statusbar   sbar;
   StatusIcon  tray;
-  
-  string m_tray_hide = _("Click to hide Bitlyfier");
-  string m_tray_show = _("Click to show Bitlyfier");
 
   public void init() throws Bitlyfier.Error
   {
@@ -61,6 +61,8 @@ public class Bitlyfier.MainWindow : GLib.Object
     tray             = (StatusIcon)    g("tray");
 
     win.destroy += () => { Gtk.main_quit(); };
+    win.window_state_event += on_window_state_changed;
+
     btn_convert.clicked += () => {
       if (rb_shorten.active)
         shorten_url();
@@ -81,11 +83,10 @@ public class Bitlyfier.MainWindow : GLib.Object
       }
     };
     
-    tray.visible = true;
-    tray.tooltip_text = m_tray_hide;
+    tray.tooltip_text = _("Click to show Bitlyfier");
     tray.activate += () => {
-      win.visible = !win.visible;
-      tray.tooltip_text = win.visible ? m_tray_hide : m_tray_show;
+      win.visible = true;
+      tray.visible = false;
     };
     
     win.set_size_request(460, 140);
@@ -106,11 +107,32 @@ public class Bitlyfier.MainWindow : GLib.Object
   }
   
   /**
+   * Callback for when the window is minimized or maximized
+   *
+   * @param widget
+   * @param event
+   */
+  bool on_window_state_changed(Window widget, Gdk.EventWindowState event)
+  {
+    Gdk.WindowState ico = Gdk.WindowState.ICONIFIED;
+    Gdk.WindowState max = Gdk.WindowState.MAXIMIZED;
+
+    if (event.changed_mask == ico && (
+        event.new_window_state == ico ||
+        event.new_window_state == (ico | max)))
+    {
+      win.hide();
+      tray.visible = true;
+    }
+    return true;
+  }
+  
+  /**
    * Shortens the URL
    *
    * @param widget
    */
-  private void shorten_url()
+  void shorten_url()
   {
     string url = e_url.text;
     string title = _("Shorten URL");
@@ -142,6 +164,7 @@ public class Bitlyfier.MainWindow : GLib.Object
       }
 
       reset_status();
+      return false;
     });
   }
 
@@ -150,7 +173,7 @@ public class Bitlyfier.MainWindow : GLib.Object
    *
    * @param widget
    */
-  private void expand_url()
+  void expand_url()
   {
     string url = e_url.text;
     string title = _("Expand URL");
@@ -169,13 +192,12 @@ public class Bitlyfier.MainWindow : GLib.Object
     }
     
     set_status();
-    
+
     Idle.add(() => {
       try {
         Bitly.Response res = api.expand(url);
         e_url.text = res.get_string("longUrl");
         rb_shorten.active = true;
-        reset_status();
       }
       catch (Bitly.Error e) {
         error_dialog(_("An error occured: %s").printf(e.message), title);
@@ -183,13 +205,16 @@ public class Bitlyfier.MainWindow : GLib.Object
       catch (GLib.Error e) {
         error_dialog(_("An error occured: %s").printf(e.message), title);
       }
+
+      reset_status();
+      return false;
     });
   }
   
   /**
    * Set the statusbar to working
    */
-  private void set_status()
+  void set_status()
   {
     sbar.push(0, _("Working..."));
   }
@@ -202,18 +227,21 @@ public class Bitlyfier.MainWindow : GLib.Object
     sbar.push(0, _("Done"));
   }
   
-  private void on_about_clicked()
+  /**
+   * Callback for the About menu item. Opens the About dialog
+   */
+  void on_about_clicked()
   {
     var d = new AboutDialog();
     try {
-      d.set_logo(new Gdk.Pixbuf.from_file(get_resource("bitlyfier.png")));
+      d.logo = new Gdk.Pixbuf.from_file(get_resource("bitlyfier.png"));
+      d.icon = new Gdk.Pixbuf.from_file(get_resource("bitlyfier-small.png"));
     }
-    catch (GLib.Error e) {
+    catch (GLib.Error e) {}
     
-    }
-    d.set_program_name("Bitlyfier");
+    d.program_name = "Bit.ly.fier";
     d.set_version(Config.VERSION);
-    d.set_authors({ "Pontus Östlund <pontus@poppa.se>", null });
+    d.authors = { "Pontus Östlund <pontus@poppa.se>", null };
     d.set_license(
       "BITLYFIER\n"                                                            +
       "Copyright © 2009 Pontus Östlund\n"                                      +
@@ -231,12 +259,12 @@ public class Bitlyfier.MainWindow : GLib.Object
       "You should have received a copy of the GNU General Public License\n"    +
       "along with this program. If not, see <http://www.gnu.org/licenses/>."
     );
-    d.set_copyright("Copyright © 2010 Pontus Östlund");
-    d.set_website("http://poppa.se");
-    d.set_website_label("www.poppa.se");
-    d.set_comments(_("Bitlyfier lets you shorten or expand links (URLs) via"   +
-                     "\nBit.ly - a service that allowes users to shorten, "    +
-                     "share\nand track links"));  
+    d.copyright = "Copyright © 2010 Pontus Östlund";
+    d.website = "http://poppa.se";
+    d.website_label = "www.poppa.se";
+    d.comments = _("Bitlyfier lets you shorten or expand links (URLs) via"     +
+                   "\nBit.ly - a service that allowes users to shorten, "      +
+                   "share\nand track links");  
     d.run();
     d.destroy();
   }
@@ -259,6 +287,9 @@ public class Bitlyfier.MainWindow : GLib.Object
   }
 }
 
+/**
+ * The settings dialog
+ */
 public class Bitlyfier.SettingsForm : GLib.Object
 {
   Builder     builder;
@@ -270,10 +301,8 @@ public class Bitlyfier.SettingsForm : GLib.Object
   Label       lb_apikey;
   Button      btn_ok;
   Button      btn_cancel;
-  
-  int response = ResponseType.CANCEL;
-  
-  public SettingsForm()
+
+  public SettingsForm() throws Bitlyfier.Error
   {
     builder = new Builder();
     var ui = get_resource("windows.ui");
@@ -298,26 +327,37 @@ public class Bitlyfier.SettingsForm : GLib.Object
     lb_apikey   = (Label)       g("lb_apikey");
     btn_ok      = (Button)      g("btn_ok");
     btn_cancel  = (Button)      g("btn_cancel");
-    
-    e_username.text   = settings.username;
-    e_apikey.text     = settings.apikey;
+
+    e_username.text   = not_null(settings.username);
+    e_apikey.text     = not_null(settings.apikey);
     cb_history.active = settings.history;
 
-    btn_cancel.clicked += () => {
-      response = ResponseType.CANCEL;
-    };
-    btn_ok.clicked.connect(() => {
-      response = ResponseType.OK;
-    });
+    btn_cancel.clicked.connect(() => {});
+    btn_ok.clicked.connect(() => {});
   }
   
+  string not_null(string? s)
+  {
+    if (s == null) return "";
+    return s;
+  }
+  
+  /**
+   * Run the dialog
+   */
   public int run()
   {
-    dialog.run();
+    int response = dialog.run();
     if (response == ResponseType.OK) {
-      settings.username = api.username = e_username.text;
-      settings.apikey   = api.apikey   = e_apikey.text;
-      settings.history  = api.history  = cb_history.active;
+      settings.username = e_username.text;
+      settings.apikey   = e_apikey.text;
+      settings.history  = cb_history.active;
+
+      if (api != null) {
+        api.username = e_username.text;
+        api.apikey   = e_apikey.text;
+        api.history  = cb_history.active;
+      }
     }
 
     dialog.destroy();

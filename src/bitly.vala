@@ -34,15 +34,55 @@ namespace Bitly
      * Version of Bitly to use
      */
     const string VERSION = "2.0.1";
+
+    /**
+     * Use XML responses
+     */
     const string FORMAT_XML = "xml";
+    
+    /**
+     * Use JSON responses
+     */
     const string FORMAT_JSON = "json";
+    
+    /**
+     * Base URL to the Bit.ly API
+     */
     const string BASE_URL = "http://api.bit.ly";
     
+    /**
+     * The Bit.ly user to log in as.
+     */
     public string username { get; set; }
+    
+    /**
+     * The Bit.ly API key to use
+     */
     public string apikey { get; set; }
+
+    /**
+     * The Bit.ly API version to use
+     */
     public string version { get; private set; default = VERSION; }
+    
+    /**
+     * Callback (not in use)
+     */
     public string callback { get; private set; }
+    
+    /**
+     * What response format to use
+     *
+     * NOTE! If FORMAT_XML the API methods of this class can't be used, they 
+     * only handle JSON responses. You can use `Bitly.call()` directly and
+     * handle the response manually 
+     */
     public string format { get; set; default = FORMAT_JSON; }
+    
+    /**
+     * The history property defines whether or not to display shortened links
+     * by this application on the statistics page or not.
+     */
     public bool history { get; set; default = true; } 
 
     /**
@@ -213,9 +253,11 @@ namespace Bitly
 #endif
       sess.send_message(mess);
     
-      if (mess.status_code != 200)
-        throw new Bitly.Error.GENERIC("Bad status (%ld) in response: %s".printf(
-                                      mess.status_code, mess.reason_phrase));
+      if (mess.status_code != 200) {
+        var m = _("Bad status (%ld) in response: %s");
+        throw new Bitly.Error.GENERIC(m.printf(mess.status_code, 
+                                               mess.reason_phrase));
+      }
 
       return mess.response_body.data;
     }
@@ -287,28 +329,54 @@ namespace Bitly
       if (status == "ERROR") {
         string m = root.get_member("errorMessage").get_string();
         int c = root.get_member("errorCode").get_int();
-        throw new Bitly.Error.GENERIC("Bitly error (%d): %s".printf(c, m)); 
+        var s = _("Bitly error (%d): %s");
+        throw new Bitly.Error.GENERIC(s.printf(c, m)); 
       }
 
       unowned Json.Node o = root.get_member("results");
-      
+
       if (o.get_value_type().name() != "JsonObject")
-        throw new Bitly.Error.GENERIC("Result is not a JSON object!");
+        throw new Bitly.Error.GENERIC(_("Result is not a JSON object!"));
 
       Json.Object obj = o.dup_object();
       return obj;
     }
   }
 
+  /**
+   * The response class makes it easier to get values from a Json.Object
+   *
+   * {{{
+   *  Response json = new Response(my_json_object);
+   *  string name = json.get_string("username");
+   *  string city = json.get_string("location.city");
+   *  int    age  = json.get_integer("age");
+   * }}}
+   */
   public class Response : GLib.Object
   {
+    /**
+     * The Json root object
+     */
     Json.Object n = null;
     
+    /**
+     * Creates a new Response class
+     *
+     * @param object
+     */
     public Response(Json.Object object)
     {
       n = object;
     }
 
+    /**
+     * Tries to find a string property with name key
+     *
+     * @param key
+     * @return
+     *  Returns null if the property wasn't found
+     */
     public string? get_string(string key)
     {
       unowned Json.Node item = null;
@@ -325,6 +393,12 @@ namespace Bitly
       return null;
     }
     
+    /**
+     * Tries to find a double property with name key
+     *
+     * @param key
+     * @return
+     */
     public double get_double(string key)
     {
       unowned Json.Node item = null;
@@ -341,6 +415,12 @@ namespace Bitly
       return 0;
     }
     
+    /**
+     * Tries to find an integer property with name key
+     *
+     * @param key
+     * @return
+     */
     public int get_integer(string key)
     {
       unowned Json.Node item = null;
@@ -357,6 +437,15 @@ namespace Bitly
       return 0;
     } 
     
+    /**
+     * Tries to find a Json.Node with name key.
+     *
+     * @param key
+     * @param node
+     *  The parent node
+     * @return
+     *  Returns the type name of the found node or null if no node was found
+     */
     private string? find_node(string key, out unowned Json.Node node)
     {
       string[] parts = key.split(".");
@@ -380,6 +469,11 @@ namespace Bitly
     }
   }
 
+  /**
+   * Base64 encodes a string
+   *
+   * @param s
+   */
   internal string base64_encode(string s)
   {
     uchar[] bytes = new uchar[s.length];
@@ -389,6 +483,12 @@ namespace Bitly
     return Base64.encode(bytes);
   }
 
+  /**
+   * Joins the string array //array// with //glue//
+   *
+   * @param glue
+   * @param array
+   */ 
   internal string join_array(string glue, string[] array)
   {
     string ret = "";

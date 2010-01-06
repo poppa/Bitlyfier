@@ -1,0 +1,226 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: bitlyfier 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-01-06 15:28+0100\n"
+"PO-Revision-Date: 2010-01-06 15:28+0100\n"
+"Last-Translator: Pontus Östlund <pontus@poppa.se>\n"
+"Language-Team: Swedish <pontus@poppa.se>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Poedit-Language: Swedish\n"
+"X-Poedit-Country: SWEDEN\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SearchPath-0: src\n"
+"X-Poedit-SearchPath-1: src/ui\n"
+
+#: src/main.c:152
+msgid "Expands the given URL"
+msgstr "Expanderar den angivna URLen"
+
+#: src/main.c:152
+msgid "Shortens the given URL"
+msgstr "Kortar den angivna URLen"
+
+#: src/main.c:152
+msgid "Sets the application in command line mode"
+msgstr "Startar applikationen i kommandoradsläge"
+
+#: src/main.c:152
+msgid "Invokes setting username and apikey"
+msgstr "Startar angivning av användarnamn och API-nyckel"
+
+#: src/main.c:236
+msgid "- Bitlyfier, URL shortener/expander"
+msgstr "- Bitlyfier, URL-kortare/-expanderare"
+
+#: src/main.c:264
+msgid "Missing required argument '-e' or '-s'"
+msgstr "Saknar obligatoriska argument '-e' eller '-s'"
+
+#: src/main.c:284
+#, c-format
+msgid "Run '%s --help' to see a full list of available command line options."
+msgstr "Kör '%s --help' för att se en komplett lista med tillgängliga argument."
+
+#: src/main.c:349
+#, c-format
+msgid ""
+"** No username or API-key for this application is set.\n"
+"** Run '%s --no-gui --gconf' to set the username and API-key!"
+msgstr ""
+"** Inget användarnamn eller API-nyckel för denna applikation är angivna.\n"
+"** Kör '%s --no-gui --gconf' för att ange användarnamn och API-nyckel!"
+
+#: src/main.c:379
+msgid "* Leave fields empty to keep old values"
+msgstr "* Lämna fälten tomma för att behålla gamla värden"
+
+#: src/main.c:382
+msgid "Write your username:"
+msgstr "Ditt användarnamn:"
+
+#: src/main.c:389
+msgid "Write your API-key:"
+msgstr "Din API-nyckel:"
+
+#: src/main.c:396
+msgid ""
+"* History? If `1` links shortened by this application will show up on your\n"
+"    statistics page at http://bit.ly and if `0` they will not."
+msgstr ""
+"* Historik? Om `1` kommer länkar kortade med denna applikation också\n"
+"    att visas på din statistiksida på http:/bit.ly och om `0` gör dem det inte."
+
+#: src/main.c:399
+msgid "Use history:"
+msgstr "Använd historik:"
+
+#: src/main.c:410
+msgid "Values have been saved!"
+msgstr "Värdena är sparade!"
+
+#: src/main.c:496
+#, c-format
+msgid "Short URL: %s"
+msgstr "Kort URL: %s"
+
+#: src/main.c:512
+#, c-format
+msgid "Long URL: %s"
+msgstr "Lång address: %s"
+
+#: src/main.c:517
+#, c-format
+msgid "Unknown service \"%s\"!"
+msgstr "Okänd tjänst \"%s\"!"
+
+#: src/bitly.c:521
+#, c-format
+msgid "Bad status (%ld) in response: %s"
+msgstr "Felaktig status (%ld) i svar: %s"
+
+#: src/bitly.c:680
+#, c-format
+msgid "Bitly error (%d): %s"
+msgstr "Bitly-fel (%d): %s"
+
+#: src/bitly.c:695
+msgid "Result is not a JSON object!"
+msgstr "Resultatet är inte ett JSON-objekt"
+
+#: src/mainwindow.c:358
+#: src/mainwindow.c:932
+msgid "Unable to locate user interface file!"
+msgstr "Kunde inte läsa in användargränssnittsfil!"
+
+#: src/mainwindow.c:387
+#: src/mainwindow.c:961
+#, c-format
+msgid "GUI load error: %s"
+msgstr "Fel vid inläsning av användargränssnitt: %s"
+
+#: src/mainwindow.c:426
+msgid "Click to show Bitlyfier"
+msgstr "Klicka för att visa Bitlyfier"
+
+#: src/mainwindow.c:525
+#: src/mainwindow.c:538
+#: src/mainwindow.c:659
+#: src/mainwindow.c:672
+#, c-format
+msgid "An error occured: %s"
+msgstr "Ett fel inträffade: %s"
+
+#: src/mainwindow.c:583
+msgid "Shorten URL"
+msgstr "Korta webbadress"
+
+#: src/mainwindow.c:594
+#, c-format
+msgid "The URL \"%s\"contains no schema (e.g. http://domain.com)"
+msgstr "URLen \"%s\" innehåller inget schema (i.e http://domän.se)"
+
+#: src/mainwindow.c:718
+msgid "Expand URL"
+msgstr "Expandera webbadress"
+
+#: src/mainwindow.c:721
+#, c-format
+msgid "The URL \"%s\" is too short"
+msgstr "URLen \"%s\" är för kort"
+
+#: src/mainwindow.c:736
+#, c-format
+msgid "The URL \"%s\" doesn't start with http://bit.ly"
+msgstr "URLen \"%s\" börjar inte med http://bit.ly"
+
+#: src/mainwindow.c:751
+msgid "Working..."
+msgstr "Arbetar..."
+
+#: src/mainwindow.c:757
+msgid "Done"
+msgstr "Färdig"
+
+#: src/mainwindow.c:819
+msgid ""
+"Bitlyfier lets you shorten or expand links (URLs) via\n"
+"Bit.ly - a service that allowes users to shorten, share\n"
+"and track links"
+msgstr ""
+"Bitlyfier låter dig korta eller expandera länkar (URLer) via\n"
+"Bit.ly - en tjänst som låter användare korta, dela och spåra\n"
+"länkar"
+
+#: src/mainwindow.c:834
+msgid "Error"
+msgstr "Fel"
+
+#: src/ui/windows.ui:6
+msgid "Bitlyfier"
+msgstr "Bitlyfier"
+
+#: src/ui/windows.ui:23
+msgid "_File"
+msgstr "_Arkiv"
+
+#: src/ui/windows.ui:43
+msgid "_Edit"
+msgstr "_Redigera"
+
+#: src/ui/windows.ui:63
+msgid "_Help"
+msgstr "_Hjälp"
+
+#: src/ui/windows.ui:182
+msgid "<b>Action</b>"
+msgstr "<b>Åtgärd</b>"
+
+#: src/ui/windows.ui:228
+msgid "Settings"
+msgstr "Inställningar"
+
+#: src/ui/windows.ui:261
+msgid "Username"
+msgstr "Användarnamn"
+
+#: src/ui/windows.ui:270
+msgid "API key"
+msgstr "API-nyckel"
+
+#: src/ui/windows.ui:307
+msgid "History"
+msgstr "Historik"
+
+#: src/ui/windows.ui:328
+msgid "If history is checked all URLs shortened by this application will also show up on your statisics page at http://bit.ly"
+msgstr "Om historik är ikryssad kommer alla URLer kortade med denna applikation att visas på din statistiksida på http://bit.ly"
+
+#: src/ui/windows.ui:354
+msgid "<b>Bit.ly API settings</b>"
+msgstr "<b>Bit.ly API-inställningar</b>"
+

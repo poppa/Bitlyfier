@@ -8,6 +8,7 @@
     <property name="default_width">500</property>
     <property name="default_height">250</property>
     <property name="icon">bitlyfier-small.png</property>
+    <signal name="window_state_event" handler="window_state_changed"/>
     <child>
       <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
@@ -19,7 +20,7 @@
             <child>
               <object class="GtkMenuItem" id="menuitem1">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_Arkiv</property>
+                <property name="label" translatable="yes">_File</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu1">
@@ -39,7 +40,7 @@
             <child>
               <object class="GtkMenuItem" id="menuitem2">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">R_edigera</property>
+                <property name="label" translatable="yes">_Edit</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu2">
@@ -59,7 +60,7 @@
             <child>
               <object class="GtkMenuItem" id="menuitem4">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_Hj&#xE4;lp</property>
+                <property name="label" translatable="yes">_Help</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu3">
@@ -225,6 +226,7 @@
   <object class="GtkDialog" id="settings">
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Settings</property>
+    <property name="resizable">False</property>
     <property name="modal">True</property>
     <property name="window_position">center-on-parent</property>
     <property name="destroy_with_parent">True</property>
@@ -364,10 +366,11 @@
             <property name="layout_style">end</property>
             <child>
               <object class="GtkButton" id="btn_cancel">
-                <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="related_action">action_settings_cancel</property>
+                <property name="use_action_appearance">True</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
@@ -378,10 +381,11 @@
             </child>
             <child>
               <object class="GtkButton" id="btn_ok">
-                <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="related_action">action_settings_ok</property>
+                <property name="use_action_appearance">True</property>
                 <property name="use_stock">True</property>
               </object>
               <packing>
@@ -400,8 +404,14 @@
       </object>
     </child>
     <action-widgets>
-      <action-widget response="0">btn_cancel</action-widget>
-      <action-widget response="0">btn_ok</action-widget>
+      <action-widget response="-6">btn_cancel</action-widget>
+      <action-widget response="-5">btn_ok</action-widget>
     </action-widgets>
+  </object>
+  <object class="GtkAction" id="action_settings_ok">
+    <property name="stock_id">gtk-apply</property>
+  </object>
+  <object class="GtkAction" id="action_settings_cancel">
+    <property name="stock_id">gtk-cancel</property>
   </object>
 </interface>

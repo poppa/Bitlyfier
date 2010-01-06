@@ -2,7 +2,7 @@
 
 Bitlyfier lets you shorten and expand links (URLs) via Bit.ly - a service that 
 allowes users to shorten, share and track links. Bitlyfier is both a desktop
-and command line application.
+and command line application for GNOME.
 
 The "Bitly" class (src/bitly.vala) can also be used as a standalone 
 implementation of the Bit.ly API.

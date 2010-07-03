@@ -77,12 +77,16 @@ namespace Bitlyfier
      */
     const string ROOT = "/apps/bitlyfier/properties/";
 
+    private string _username;
     /**
      * The Bit.ly user to log in as
      */
     public string? username {
       get {
-        try { return gcli.get_string(ROOT + "username"); }
+        try { 
+          _username = gcli.get_string(ROOT + "username");
+          return _username;
+        }
         catch (GLib.Error e) {
           warning("Unable to get GConf string \"username\"!");
           return null;
@@ -96,12 +100,16 @@ namespace Bitlyfier
       }
     }
  
+    private string _apikey;
     /**
      * The Bit.ly API key to use
      */
     public string? apikey {
       get {
-        try { return gcli.get_string(ROOT + "apikey"); }
+        try {
+          _apikey = gcli.get_string(ROOT + "apikey");
+          return _apikey; 
+        }
         catch (GLib.Error e) {
           warning("Unable to get GConf string \"apikey\"!");
           return null;

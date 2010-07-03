@@ -258,7 +258,7 @@ namespace Bitly
                                                mess.reason_phrase));
       }
 
-      return mess.response_body.data;
+      return (string)mess.response_body.data;
     }
 
     /**
@@ -337,8 +337,8 @@ namespace Bitly
 
       if (status == "ERROR") {
         string m = root.get_member("errorMessage").get_string();
-        int c = root.get_member("errorCode").get_int();
-        var s = _("Bitly error (%d): %s");
+        int64 c = root.get_member("errorCode").get_int();
+        var s = _("Bitly error (%ld): %s");
         throw new Bitly.Error.GENERIC(s.printf(c, m)); 
       }
 
@@ -430,7 +430,7 @@ namespace Bitly
      * @param key
      * @return
      */
-    public int get_integer(string key)
+    public int64 get_integer(string key)
     {
       unowned Json.Node item = null;
       if (key.contains(".")) {

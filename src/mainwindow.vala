@@ -60,34 +60,46 @@ public class Bitlyfier.MainWindow : GLib.Object
     sbar             = (Statusbar)     g("statusbar");
     tray             = (StatusIcon)    g("tray");
 
-    win.destroy += () => { Gtk.main_quit(); };
-    win.window_state_event += on_window_state_changed;
+    win.destroy.connect(() => { Gtk.main_quit(); });
+    win.window_state_event.connect((wnd, event) => {
+      Gdk.WindowState ico = Gdk.WindowState.ICONIFIED;
+      Gdk.WindowState max = Gdk.WindowState.MAXIMIZED;
 
-    btn_convert.clicked += () => {
+      if (event.changed_mask == ico && (
+	  event.new_window_state == ico ||
+	  event.new_window_state == (ico | max)))
+      {
+	win.hide();
+	tray.visible = true;
+      }
+      return true;
+    });
+
+    btn_convert.clicked.connect(() => {
       if (rb_shorten.active)
         shorten_url();
       else
         expand_url();
-    };
+    });
     rb_shorten.active = true;
     
-    ((ImageMenuItem) g("menu_quit")).activate += () => {
+    ((ImageMenuItem) g("menu_quit")).activate.connect(() => {
       Gtk.main_quit();
-    };
+    });
     
-    ((ImageMenuItem) g("menu_about")).activate += on_about_clicked;
-    ((ImageMenuItem) g("menu_settings")).activate += () => {
+    ((ImageMenuItem) g("menu_about")).activate.connect(on_about_clicked);
+    ((ImageMenuItem) g("menu_settings")).activate.connect(() => {
       try { new SettingsForm().run(); }
       catch (Bitlyfier.Error e) {
         message("%s", e.message);
       }
-    };
+    });
     
     tray.tooltip_text = _("Click to show Bitlyfier");
-    tray.activate += () => {
+    tray.activate.connect(() => {
       win.visible = true;
       tray.visible = false;
-    };
+    });
     
     win.set_size_request(460, 140);
     win.show_all();
@@ -104,27 +116,6 @@ public class Bitlyfier.MainWindow : GLib.Object
   GLib.Object g(string name)
   {
     return builder.get_object(name);
-  }
-  
-  /**
-   * Callback for when the window is minimized or maximized
-   *
-   * @param widget
-   * @param event
-   */
-  bool on_window_state_changed(Window widget, Gdk.EventWindowState event)
-  {
-    Gdk.WindowState ico = Gdk.WindowState.ICONIFIED;
-    Gdk.WindowState max = Gdk.WindowState.MAXIMIZED;
-
-    if (event.changed_mask == ico && (
-        event.new_window_state == ico ||
-        event.new_window_state == (ico | max)))
-    {
-      win.hide();
-      tray.visible = true;
-    }
-    return true;
   }
   
   /**
